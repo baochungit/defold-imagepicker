@@ -1,0 +1,14 @@
+name: "ImagePicker"
+
+platforms:
+    armv7-ios:
+        context:
+            frameworks: ['Foundation']
+
+    arm64-ios:
+        context:
+            frameworks: ['Foundation']
+
+    x86_64-ios:
+        context:
+            frameworks: ['Foundation']
