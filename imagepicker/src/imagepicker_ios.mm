@@ -2,6 +2,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#include <dmsdk/sdk.h>
 #include "imagepicker_private.h"
 
 namespace ext_imagepicker {
@@ -10,9 +11,8 @@ void Initialize()
 {
 }
 
-const char* GetTimezone()
+void Show(dmScript::LuaCallbackInfo* callback)
 {
-	return [[[NSTimeZone localTimeZone] name] UTF8String];
 }
 
 } // namespace

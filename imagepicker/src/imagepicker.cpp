@@ -11,7 +11,7 @@ namespace ext_imagepicker {
 static int ImagePicker_Show(lua_State* L)
 {
 	DM_LUA_STACK_CHECK(L, 0);
-	Show();
+	Show(dmScript::CreateCallback(L, 1));
 	return 0;
 }
 
