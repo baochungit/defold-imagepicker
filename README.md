@@ -1,5 +1,5 @@
 # Defold ImagePicker
-(Need someone to help with iOS implementation)
+An Image Picker extension for Android, iOS.
 
 ## APIs:
 
