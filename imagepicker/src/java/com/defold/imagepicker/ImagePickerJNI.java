@@ -8,8 +8,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 
-/**
- */
+
 public class ImagePickerJNI implements Handler.Callback {
 
   private static final String TAG = "defold.imagepicker";
