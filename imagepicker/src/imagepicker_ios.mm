@@ -2,7 +2,6 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <JQImagePicker.h>
 #include <dmsdk/sdk.h>
 #include "imagepicker_private.h"
 
@@ -22,9 +21,7 @@ static char* CopyString(NSString* s)
 }
 
 
-@interface CImagePickerHandler : NSObject<JQImagePickerDelegate>
-
-UIViewController viewController;
+@interface CImagePickerHandler : NSObject<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 - (void)show;
 
@@ -34,30 +31,23 @@ UIViewController viewController;
 
 - (void)show
 {
-	self.viewController = [[UIViewController alloc] init];
+	UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+	picker.delegate = self;
+	picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+	picker.allowsEditing = true;
+	[picker setModalPresentationStyle:UIModalPresentationOverFullScreen];
 
-	JQImagePicker *imagePicker = [JQImagePicker sharedInstance];
-	imagePicker.delegate = self;
-	[imagePicker showOriginalImagePickerWithType:ImagePickerPhoto InViewController:viewController];
+	UIViewController* controller = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+	[controller presentViewController:picker animated:YES completion:nil];
 }
 
-#pragma mark - JQImagePicker Delegate
-
-- (void)imagePickerDidCancel:(JQImagePicker *)imagePicker
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)editedImage editingInfo:(NSDictionary *)editingInfo
 {
-	NSLog(@"Cancelled");
-	[viewController release];
-}
-
-- (void)imagePicker:(JQImagePicker *)imagePicker didFinished:(UIImage *)editedImage
-{
-	// NSLog(@"%@",editedImage);
-	NSString* fileName = [[NSUUID UUID] UUIDString];
+	NSString* fileName = [[[NSUUID UUID] UUIDString] stringByAppendingString:@".jpg"];
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString* filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@fileName];
-	[UIImageJPEGRepresentation(editedImage, 1.0) writeToFile:filePath atomically:YES];
-	NSLog(@"%@",filePath);
-	[viewController release];
+	NSString* filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:fileName];
+	[UIImageJPEGRepresentation(editedImage, 0.5) writeToFile:filePath atomically:YES];
+	NSLog(@"Image path: %@", filePath);
 
 	if (g_ImagePicker.m_Listener != 0)
 	{
@@ -74,6 +64,13 @@ UIViewController viewController;
 			g_ImagePicker.m_Listener = 0;
 		}
 	}
+
+	[picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+	NSLog(@"Cancelled");
+	[picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
