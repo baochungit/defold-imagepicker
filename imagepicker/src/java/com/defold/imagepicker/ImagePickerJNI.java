@@ -43,16 +43,13 @@ public class ImagePickerJNI implements Handler.Callback {
 
     @Override
     public boolean handleMessage(Message msg) {
-      boolean handled = false;
       Bundle data = msg.getData();
       boolean success = data.getBoolean(MSG_KEY_SUCCESS, false);
       if (success) {
         String uri = data.getString(MSG_KEY_URI);
         Log.d(TAG, uri);
         this.onDone(uri);
-      } else {
-        this.onDone("");
       }
-      return handled;
+      return true;
     }
 }
